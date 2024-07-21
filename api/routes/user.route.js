@@ -3,7 +3,7 @@ import { login } from '../controller/user.controller.js'
 import { logout } from '../controller/user.controller.js'
 import { register } from '../controller/user.controller.js'
 import { getUser } from '../controller/user.controller.js'
-import { isAuthenticated } from '../middleware.js/auth.js'
+import { isAuthenticated } from '../middleware/auth.js'
 const userRouter = express.Router()
 
 userRouter.post("/register",register)

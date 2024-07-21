@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import addressRoutes from './routes/address.routes.js'
 import userRouter from './routes/user.route.js'
 import cookieParser from 'cookie-parser'
-import { errorMiddleWare } from './middleware.js/error.js'
+import { errorMiddleWare } from './middleware/error.js'
 import { connectdb } from './data/database.js'
 const app = express()
 

@@ -1,16 +1,18 @@
-import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
-export const isAuthenticated = async (req, res, next) => {
-  const { token } = req.cookies;
+import jwt from 'jsonwebtoken'
+import User from '../models/user.model.js'
+import expressAsyncHandler from 'express-async-handler'
+import { errorHandler } from '../utils/errorHandler.js'
+export const isAuthenticated = expressAsyncHandler(async (req, res, next) => {
+   const { token } = req.cookies
 
-  if (!token)
-    return res.status(404).json({
-      success: false,
-      message: "Login First",
-    });
+   if (!token) return next(errorHandler(401, 'Unauthorized, no access token'))
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+   jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
+      if (error) {
+         return next(errorHandler(401, 'Unauthorized, access token not valid'))
+      }
 
-  req.user = await User.findById(decoded._id);
-  next();
-};
+      req.user = user
+      next()
+   })
+})

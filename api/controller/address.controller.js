@@ -5,7 +5,6 @@ import Address from "../models/address.model.js";
 export const createAddress = asyncHandler(async(req, res, next)=>{
     const { userId, houseNumber, floor, area, landmark, name, phone } = req.body;
 
-    // Create a new address instance
     const newAddress = new Address({
       userId,
       houseNumber,

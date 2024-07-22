@@ -2,10 +2,6 @@ import mongoose from 'mongoose'
 
 
 const addressSchema = mongoose.Schema({
-   userId: {
-      type: String,
-      required: true,
-   },
 
    houseNumber: {
       type: String,
@@ -23,7 +19,6 @@ const addressSchema = mongoose.Schema({
 
    landmark: {
       type: String,
-      required: true,
    },
 
    name: {

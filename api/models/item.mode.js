@@ -10,9 +10,14 @@ const itemSchema = mongoose.Schema({
       type: String,
       required: true,
    },
-   
+
    subCategory: {
       type: String,
+   },
+
+   description: {
+      type: String,
+      required: true,
    },
 
    itemPrice: {
@@ -34,12 +39,12 @@ const itemSchema = mongoose.Schema({
       type: Boolean,
       required: true,
    },
-   weight:{
-    type: String,
-    required :true
+   weight: {
+      type: String,
+      required: true,
    },
 
    types: {
-    type: Array,
-   }
+      type: Array,
+   },
 })

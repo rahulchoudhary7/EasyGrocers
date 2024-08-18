@@ -21,6 +21,10 @@ const sellerSchema = new mongoose.Schema({
       select: false,
    },
    description: String,
+   categories: {
+      type: [String],
+      required: true,
+   },
    phone: {
       type: String,
       required: true,
@@ -35,6 +39,10 @@ const sellerSchema = new mongoose.Schema({
    isVerified: {
       type: Boolean,
       default: false,
+   },
+   image: {
+      type: String,
+      required: true,
    },
    rating: {
       type: Number,

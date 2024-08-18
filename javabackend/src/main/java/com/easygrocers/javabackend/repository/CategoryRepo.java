@@ -1,13 +1,12 @@
 package com.easygrocers.javabackend.repository;
 
-import java.util.UUID;
-
+import com.easygrocers.javabackend.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.easygrocers.javabackend.entity.Product;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface ProductRepo extends JpaRepository<Product, UUID> {
+public interface CategoryRepo extends JpaRepository<Category, UUID> {
 
 }

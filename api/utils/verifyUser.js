@@ -1,1 +1,0 @@
-//for verify user there is isautheticated in auth,js in middleware

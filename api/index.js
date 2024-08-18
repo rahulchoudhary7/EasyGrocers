@@ -4,6 +4,7 @@ import userRouter from './routes/user.route.js'
 import cookieParser from 'cookie-parser'
 import { errorMiddleWare } from './middleware/error.js'
 import { connectdb } from './data/database.js'
+import sellerRouter from './routes/seller.route.js'
 const app = express()
 
 dotenv.config()
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use('/api/user', userRouter)
+app.use('/api/seller', sellerRouter);
 app.use(errorMiddleWare)
 
 app.listen(port, () => {

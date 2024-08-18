@@ -2,7 +2,6 @@ import User from '../models/user.model.js'
 import { errorHandler } from '../utils/errorHandler.js'
 import asyncHandler from 'express-async-handler'
 import bcryptjs from 'bcryptjs'
-import { sendCookie } from '../utils/sendCookie.js'
 import Address from '../models/address.model.js'
 import jwt from 'jsonwebtoken'
 
@@ -22,7 +21,19 @@ export const register = asyncHandler(async (req, res, next) => {
    if (!newUser) {
       return next(errorHandler(500, 'Internal Server error'))
    }
-   sendCookie(newUser, res, 'created successfully')
+
+   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '60m',
+   })
+
+   const userWithoutPassword = newUser.toObject()
+   delete userWithoutPassword.password
+
+   res.status(201).set('Authorization', `Bearer ${token}`).json({
+      success: true,
+      message: 'User registered successfully',
+      user: userWithoutPassword,
+   })
 
    console.log(newUser)
 })
@@ -46,16 +57,11 @@ export const login = asyncHandler(async (req, res, next) => {
    delete userWithoutPassword.addresses
 
    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '15m',
+      expiresIn: '60m',
    })
 
    res.status(200)
-      .cookie('token', token, {
-         httpOnly: true,
-         maxAge: 15 * 60 * 1000,
-         secure: process.env.NODE_ENV === 'production',
-         sameSite: 'strict',
-      })
+      .set('Authorization', `Bearer ${token}`)
       .json({
          success: true,
          message: `Welcome back, ${user.name}`,
@@ -64,14 +70,10 @@ export const login = asyncHandler(async (req, res, next) => {
 })
 
 export const logout = (req, res) => {
-   res.status(200)
-      .cookie('token', '', {
-         expires: new Date(Date.now()),
-      })
-      .json({
-         success: true,
-         user: req.user,
-      })
+   res.status(200).json({
+      success: true,
+      message: 'Logged out successfully',
+   })
 }
 
 export const getAddress = asyncHandler(async (req, res, next) => {

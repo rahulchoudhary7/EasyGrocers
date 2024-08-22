@@ -34,6 +34,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NotAuthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleNotAuthorizedException(NotAuthorizedException ex) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value(), ex.getMessage(),
+                System.currentTimeMillis());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InvalidInputException.class)
     public ResponseEntity<ErrorResponse> handleInvalidInputException(InvalidInputException ex) {
         ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(),

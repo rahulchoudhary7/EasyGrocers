@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.easygrocers.javabackend.dto.InventoryItemDTO;
 import com.easygrocers.javabackend.entity.InventoryItem;
+import com.easygrocers.javabackend.entity.UserDetails;
+import com.easygrocers.javabackend.exception.NotAuthorizedException;
 import com.easygrocers.javabackend.exception.ResourceNotFoundException;
 import com.easygrocers.javabackend.repository.InventoryItemRepo;
 
@@ -22,6 +24,7 @@ public class InventoryItemService {
 
     @Transactional(readOnly = true)
     public List<InventoryItemDTO> getAllInventoryItem(UUID id) {
+
         return inventoryItemRepo.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -35,8 +38,23 @@ public class InventoryItemService {
         return convertToDTO(existingInventoryItem);
     }
 
+    @Transactional(readOnly = true)
+    public List<InventoryItemDTO> getInventoryItemsBySellerId(String sellerId) {
+        List<InventoryItem> inventoryItems = inventoryItemRepo.findBySellerId(sellerId);
+        return inventoryItems.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
-    public InventoryItemDTO createInventoryItem(InventoryItemDTO inventoryItemDTO) {
+    public InventoryItemDTO createInventoryItem(InventoryItemDTO inventoryItemDTO, UserDetails userDetails) {
+
+        String userType = userDetails.getUserType();
+
+        if (userType.equals("user")) {
+            throw new NotAuthorizedException("Not Authorized");
+        }
+        
         InventoryItem inventoryItem = convertToEntity(inventoryItemDTO);
 
         InventoryItem savedInventoryItem = inventoryItemRepo.save(inventoryItem);
@@ -45,11 +63,18 @@ public class InventoryItemService {
     }
 
     @Transactional
-    public InventoryItemDTO updateInventoryItem(UUID id, InventoryItemDTO inventoryItemDTO) {
+    public InventoryItemDTO updateInventoryItem(UUID id, InventoryItemDTO inventoryItemDTO, UserDetails userDetails) {
+
+        String userType = userDetails.getUserType();
+        String sellerId = userDetails.getUserId();
 
         InventoryItem existingInventoryItem = inventoryItemRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
 
+        if (userType.equals("user") || !existingInventoryItem.getSellerId().equals(sellerId)) {
+            System.out.println(existingInventoryItem.getSellerId() + "\n" + sellerId + "\n");
+            throw new NotAuthorizedException("Not Authorized");
+        }
         BeanUtils.copyProperties(inventoryItemDTO, existingInventoryItem, "id");
 
         InventoryItem updatedInventoryItem = inventoryItemRepo.save(existingInventoryItem);
@@ -58,9 +83,20 @@ public class InventoryItemService {
     }
 
     @Transactional
-    public void deleteInventoryItem(UUID id) {
-        if (!inventoryItemRepo.existsById(id)) {
-            throw new ResourceNotFoundException("Item not found with id: " + id);
+    public void deleteInventoryItem(UUID id, UserDetails userDetails) {
+        String userType = userDetails.getUserType();
+        String sellerId = userDetails.getUserId();
+
+        if (userType.equals("user")) {
+            throw new NotAuthorizedException("Not Authorized");
+        }
+
+        InventoryItem existingInventoryItem = inventoryItemRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
+
+        if (!existingInventoryItem.getSellerId().equals(sellerId)) {
+            System.out.println(existingInventoryItem.getSellerId() + "\n" + sellerId + "\n");
+            throw new NotAuthorizedException("Not Authorized");
         }
 
         inventoryItemRepo.deleteById(id);

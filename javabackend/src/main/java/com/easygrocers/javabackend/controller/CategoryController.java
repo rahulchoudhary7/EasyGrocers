@@ -3,8 +3,6 @@ package com.easygrocers.javabackend.controller;
 import com.easygrocers.javabackend.dto.CategoryDTO;
 import com.easygrocers.javabackend.service.CategoryService;
 
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -56,9 +56,13 @@ export const login = asyncHandler(async (req, res, next) => {
    delete userWithoutPassword.password
    delete userWithoutPassword.addresses
 
-   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '60m',
-   })
+   const token = jwt.sign(
+      { id: user._id, userType: user.userType },
+      process.env.JWT_SECRET,
+      {
+         expiresIn: '60m',
+      },
+   )
 
    res.status(200)
       .set('Authorization', `Bearer ${token}`)

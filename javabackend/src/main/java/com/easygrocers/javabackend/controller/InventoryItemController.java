@@ -1,15 +1,19 @@
 package com.easygrocers.javabackend.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.easygrocers.javabackend.dto.InventoryItemDTO;
+import com.easygrocers.javabackend.entity.UserDetails;
 import com.easygrocers.javabackend.service.InventoryItemService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,9 +36,26 @@ public class InventoryItemController {
         return ResponseEntity.ok(inventoryItemDTO);
     }
 
-    @PostMapping("/createInventoryItem")
-    public ResponseEntity<InventoryItemDTO> createInventoryItem(@Valid @RequestBody InventoryItemDTO inventoryItemDTO) {
-        InventoryItemDTO createdInventoryItemDTO = inventoryItemService.createInventoryItem(inventoryItemDTO);
+    @GetMapping("/getInventoryItemsForSeller")
+    public ResponseEntity<List<InventoryItemDTO>> getAllInventoryItem(HttpServletRequest request,
+            @RequestParam String sellerId) {
+
+        List<InventoryItemDTO> inventoryItemDTO = inventoryItemService
+                .getInventoryItemsBySellerId(sellerId);
+
+        System.out.println(inventoryItemDTO);
+
+        return ResponseEntity.ok(inventoryItemDTO);
+    }
+
+    @PostMapping(value = "/createInventoryItem", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<InventoryItemDTO> createInventoryItem(@Valid @RequestBody InventoryItemDTO inventoryItemDTO,
+            HttpServletRequest request) {
+
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
+
+        InventoryItemDTO createdInventoryItemDTO = inventoryItemService.createInventoryItem(inventoryItemDTO,
+                userDetails);
 
         return ResponseEntity.ok(createdInventoryItemDTO);
 
@@ -42,15 +63,22 @@ public class InventoryItemController {
 
     @PutMapping("/updateInventoryItem")
     public ResponseEntity<InventoryItemDTO> updateInventoryItem(@RequestParam UUID inventoryItemId,
-            @Valid @RequestBody InventoryItemDTO inventoryItemDTO) {
-        InventoryItemDTO updaInventoryItemDTO = inventoryItemService.updateInventoryItem(inventoryItemId, inventoryItemDTO);
+            @Valid @RequestBody InventoryItemDTO inventoryItemDTO, HttpServletRequest request) {
+
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
+
+        InventoryItemDTO updaInventoryItemDTO = inventoryItemService.updateInventoryItem(inventoryItemId,
+                inventoryItemDTO, userDetails);
 
         return ResponseEntity.ok(updaInventoryItemDTO);
     }
 
     @DeleteMapping("/deleteInventoryItem")
-    public ResponseEntity<String> deleteInventoryItem(@RequestParam UUID inventoryItemId) {
-        inventoryItemService.deleteInventoryItem(inventoryItemId);
+    public ResponseEntity<String> deleteInventoryItem(@RequestParam UUID inventoryItemId, HttpServletRequest request) {
+
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
+
+        inventoryItemService.deleteInventoryItem(inventoryItemId, userDetails);
 
         return ResponseEntity.ok("Inventory item deleted");
     }

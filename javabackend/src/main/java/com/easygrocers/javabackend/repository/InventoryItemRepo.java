@@ -5,8 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.easygrocers.javabackend.entity.InventoryItem;
 import java.util.UUID;
+import java.util.List;
 
 @Repository
 public interface InventoryItemRepo extends JpaRepository<InventoryItem, UUID> {
+
+    public List<InventoryItem> findBySellerId(String sellerId);
 
 }

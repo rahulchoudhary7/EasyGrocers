@@ -14,6 +14,7 @@ const sellerSchema = new mongoose.Schema({
       type: String,
       required: true,
       unique: true,
+      match: /.+\@.+\..+/,
    },
    password: {
       type: String,
@@ -39,6 +40,11 @@ const sellerSchema = new mongoose.Schema({
    isVerified: {
       type: Boolean,
       default: false,
+   },
+   userType: {
+      type: String,
+      required: true,
+      default: "seller"
    },
    image: {
       type: String,

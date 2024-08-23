@@ -21,9 +21,13 @@ export const registerSeller = asyncHandler(async (req, res, next) => {
       return next(errorHandler(500, 'Internal Server error'))
    }
 
-   const token = jwt.sign({ id: newSeller._id }, process.env.JWT_SECRET, {
-      expiresIn: '60m',
-   })
+   const token = jwt.sign(
+      { id: newSeller._id, userType: newSeller.userType },
+      process.env.JWT_SECRET,
+      {
+         expiresIn: '60m',
+      },
+   )
 
    const sellerWithoutPassword = newSeller.toObject()
    delete sellerWithoutPassword.password
@@ -56,9 +60,13 @@ export const loginSeller = asyncHandler(async (req, res, next) => {
    const sellerWithoutPassword = seller.toObject()
    delete sellerWithoutPassword.password
 
-   const token = jwt.sign({ id: seller._id }, process.env.JWT_SECRET, {
-      expiresIn: '60m',
-   })
+   const token = jwt.sign(
+      { id: seller._id, userType: seller.userType },
+      process.env.JWT_SECRET,
+      {
+         expiresIn: '60m',
+      },
+   )
 
    res.status(200)
       .set('Authorization', `Bearer ${token}`)

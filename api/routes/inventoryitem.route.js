@@ -1,8 +1,11 @@
 import express from 'express'
 import { isAuthenticated } from '../middleware/auth.js'
 import {
-   createdInventoryItem,
-   fetchInventoryItems,
+   createInventoryItem,
+   deleteInventoryItem,
+   fetchAllInventoryItemsForSeller,
+   fetchInventoryItemById,
+   updateInventoryItem,
 } from '../controller/inventoryitem.controller.js'
 
 const inventoryItemRouter = express.Router()
@@ -10,13 +13,31 @@ const inventoryItemRouter = express.Router()
 inventoryItemRouter.get(
    '/getInventoryItems',
    isAuthenticated,
-   fetchInventoryItems,
+   fetchAllInventoryItemsForSeller,
+)
+
+inventoryItemRouter.get(
+   '/getInventoryItem',
+   isAuthenticated,
+   fetchInventoryItemById,
 )
 
 inventoryItemRouter.post(
    '/createInventoryItem',
    isAuthenticated,
-   createdInventoryItem,
+   createInventoryItem,
+)
+
+inventoryItemRouter.put(
+   '/updateInventoryItem',
+   isAuthenticated,
+   updateInventoryItem,
+)
+
+inventoryItemRouter.delete(
+   '/deleteInventoryItem',
+   isAuthenticated,
+   deleteInventoryItem,
 )
 
 export default inventoryItemRouter

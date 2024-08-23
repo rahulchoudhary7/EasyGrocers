@@ -68,11 +68,17 @@ public class InventoryItemService {
         String userType = userDetails.getUserType();
         String sellerId = userDetails.getUserId();
 
+        System.out.println(sellerId + "--------------\n");
+
+
+
+
         InventoryItem existingInventoryItem = inventoryItemRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Item not found with id: " + id));
 
-        if (userType.equals("user") || !existingInventoryItem.getSellerId().equals(sellerId)) {
-            System.out.println(existingInventoryItem.getSellerId() + "\n" + sellerId + "\n");
+
+        if (userType.equals("user") || !(existingInventoryItem.getSellerId().equals(sellerId))) {
+            System.out.println(existingInventoryItem.getSellerId() + "\n\n" + sellerId + "\n");
             throw new NotAuthorizedException("Not Authorized");
         }
         BeanUtils.copyProperties(inventoryItemDTO, existingInventoryItem, "id");

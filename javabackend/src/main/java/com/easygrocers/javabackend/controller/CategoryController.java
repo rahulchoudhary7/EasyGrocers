@@ -1,8 +1,11 @@
 package com.easygrocers.javabackend.controller;
 
 import com.easygrocers.javabackend.dto.CategoryDTO;
+import com.easygrocers.javabackend.entity.UserDetails;
+import com.easygrocers.javabackend.exception.NotAuthorizedException;
 import com.easygrocers.javabackend.service.CategoryService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,33 +29,36 @@ public class CategoryController {
     }
 
     @PostMapping("/createCategory")
-    public ResponseEntity<CategoryDTO> createCategory(
-            @RequestParam("name") String name,
-            @RequestParam("image") MultipartFile imageFile) throws IOException {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO, HttpServletRequest request) {
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName(name);
-        categoryDTO.setImage(imageFile.getBytes());
-
+        if(!userDetails.getUserType().equals("admin")){
+            throw new NotAuthorizedException("Unauthorized");
+        }
         CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
         return ResponseEntity.ok(createdCategory);
     }
 
-    @PutMapping("/udpateCategory")
+    @PutMapping("/updateCategory")
     public ResponseEntity<CategoryDTO> updateCategory(@RequestParam UUID categoryId,
-            @RequestParam("name") String name,
-            @RequestParam("image") MultipartFile imageFile) throws IOException {
+            @RequestBody CategoryDTO categoryDTO, HttpServletRequest request)  {
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName(name);
-        categoryDTO.setImage(imageFile.getBytes());
+        if(!userDetails.getUserType().equals("admin")){
+            throw new NotAuthorizedException("Unauthorized");
+        }
         CategoryDTO updatedCategoryDTO = categoryService.updateCategory(categoryId, categoryDTO);
 
         return ResponseEntity.ok(updatedCategoryDTO);
     }
 
     @DeleteMapping("/deleteCategory")
-    public ResponseEntity<String> deleteCategory(@RequestParam UUID categoryId) {
+    public ResponseEntity<String> deleteCategory(@RequestParam UUID categoryId, HttpServletRequest request) {
+        UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
+
+        if(!userDetails.getUserType().equals("admin")){
+            throw new NotAuthorizedException("Unauthorized");
+        }
         categoryService.deleteCategory(categoryId);
 
         return ResponseEntity.ok("Category deleted successfully");

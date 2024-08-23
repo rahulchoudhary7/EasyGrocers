@@ -6,6 +6,7 @@ import { errorMiddleWare } from './middleware/error.js'
 import { connectdb } from './data/database.js'
 import sellerRouter from './routes/seller.route.js'
 import inventoryItemRouter from './routes/inventoryitem.route.js'
+import categoryRouter from './routes/category.route.js'
 const app = express()
 
 dotenv.config()
@@ -18,6 +19,7 @@ app.use(cookieParser())
 app.use('/api/user', userRouter)
 app.use('/api/seller', sellerRouter)
 app.use('/api/inventoryItem', inventoryItemRouter)
+app.use('/api/categories', categoryRouter)
 app.use(errorMiddleWare)
 
 app.listen(port, () => {

@@ -22,7 +22,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         if (!rateLimiter.tryAcquire()) {
-            response.setStatus(429); // 429 Too Many Requests
+            response.setStatus(429);
             response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Rate limit exceeded\"}");
             return;

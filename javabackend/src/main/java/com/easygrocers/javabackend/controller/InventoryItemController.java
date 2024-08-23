@@ -54,6 +54,8 @@ public class InventoryItemController {
 
         UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
 
+        System.out.println(userDetails.getUserId() +"\n\n\n=========");
+
         InventoryItemDTO createdInventoryItemDTO = inventoryItemService.createInventoryItem(inventoryItemDTO,
                 userDetails);
 
@@ -66,7 +68,7 @@ public class InventoryItemController {
             @Valid @RequestBody InventoryItemDTO inventoryItemDTO, HttpServletRequest request) {
 
         UserDetails userDetails = (UserDetails) request.getAttribute("userDetails");
-
+        System.out.println(userDetails.getUserId() +"\n\n\n=========");
         InventoryItemDTO updaInventoryItemDTO = inventoryItemService.updateInventoryItem(inventoryItemId,
                 inventoryItemDTO, userDetails);
 

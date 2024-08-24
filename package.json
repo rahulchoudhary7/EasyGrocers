@@ -2,7 +2,6 @@
     "name": "main-project",
     "version": "1.0.0",
     "scripts": {
-      "start": "concurrently \"cd client && npm run dev\" \"cd api && node index.js\""
+        "start": "concurrently \"cd client && npm run dev\" \"cd api && node index.js\""
     }
-  }
-  
+}

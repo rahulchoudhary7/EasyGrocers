@@ -9,7 +9,7 @@ import {
 
 const categoryRouter = express.Router()
 
-categoryRouter.get('/getAllCategories', isAuthenticated, getAllCategories)
+categoryRouter.get('/getAllCategories', getAllCategories)
 
 categoryRouter.post('/createCategory', isAuthenticated, createCategory)
 

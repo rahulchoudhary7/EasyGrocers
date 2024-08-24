@@ -89,7 +89,9 @@ export const sellerByCategory = asyncHandler(async (req, res) => {
    const limit = parseInt(req.query.limit) || 10
    const skip = (page - 1) * limit
 
-   const sellers = await Seller.find({ categories: req.params.category })
+   const { category } = req.query
+
+   const sellers = await Seller.find({ categories: category })
       .select('sellerName shopName image rating')
       .skip(skip)
       .limit(limit)

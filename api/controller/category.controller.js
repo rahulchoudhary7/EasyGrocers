@@ -5,12 +5,16 @@ export const getAllCategories = asyncHandler(async (req, res, next) => {
    const javaUrl = process.env.JAVA_URL
 
    const user = req.user
+   
+   const userId = user?.id || "guest"
+
+   const userType = user?.userType || "guest"
 
    const response = await fetch(`${javaUrl}/api/categories/getAllCategories`, {
       headers: {
          'X-API-Key': process.env.API_KEY,
-         'X-User-Id': user.id,
-         'X-User-Type': user.userType,
+         'X-User-Id': userId,
+         'X-User-Type': userType,
       },
    })
 

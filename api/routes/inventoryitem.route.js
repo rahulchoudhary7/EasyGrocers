@@ -3,7 +3,7 @@ import { isAuthenticated } from '../middleware/auth.js'
 import {
    createInventoryItem,
    deleteInventoryItem,
-   fetchAllInventoryItemsForSeller,
+   fetchAllInventoryItemsBySeller,
    fetchInventoryItemById,
    updateInventoryItem,
 } from '../controller/inventoryitem.controller.js'
@@ -12,13 +12,11 @@ const inventoryItemRouter = express.Router()
 
 inventoryItemRouter.get(
    '/getInventoryItems',
-   isAuthenticated,
-   fetchAllInventoryItemsForSeller,
+   fetchAllInventoryItemsBySeller,
 )
 
 inventoryItemRouter.get(
    '/getInventoryItem',
-   isAuthenticated,
    fetchInventoryItemById,
 )
 

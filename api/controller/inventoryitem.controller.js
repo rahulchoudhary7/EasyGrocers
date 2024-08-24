@@ -1,25 +1,24 @@
 import asyncHandler from 'express-async-handler'
 import { errorHandler } from '../utils/errorHandler.js'
 
-export const fetchAllInventoryItemsForSeller = asyncHandler(
+export const fetchAllInventoryItemsBySeller = asyncHandler(
    async (req, res, next) => {
       const javaUrl = process.env.JAVA_URL
 
       const user = req.user
 
-      
+      const userId = user?.id || 'guest'
+      const userType = user?.userType || 'guest'
+
       const { sellerId } = req.query
-      
-      console.log('====================================')
-      console.log(user.id, user.userType, sellerId)
-      console.log('====================================')
+
       const response = await fetch(
-         `${javaUrl}/api/InventoryItem/getInventoryItemsForSeller?sellerId=${sellerId}`,
+         `${javaUrl}/api/InventoryItem/getInventoryItemsBySeller?sellerId=${sellerId}`,
          {
             headers: {
                'X-API-Key': process.env.API_KEY,
-               'X-User-Id': user.id,
-               'X-User-Type': user.userType,
+               'X-User-Id': userId,
+               'X-User-Type': userType,
             },
          },
       )
@@ -37,16 +36,18 @@ export const fetchInventoryItemById = asyncHandler(async (req, res, next) => {
    const javaUrl = process.env.JAVA_URL
 
    const user = req.user
+   const userId = user?.id || 'guest'
+   const userType = user?.userType || 'guest'
 
    const { inventoryItemId } = req.query
 
    const response = await fetch(
-      `${javaUrl}/api/InventoryItem/getInventoryItem?iventoryItemId=${inventoryItemId}`,
+      `${javaUrl}/api/InventoryItem/getInventoryItem?inventoryItemId=${inventoryItemId}`,
       {
          headers: {
             'X-API-Key': process.env.API_KEY,
-            'X-User-Id': user.id,
-            'X-User-Type': user.userType,
+            'X-User-Id': userId,
+            'X-User-Type': userType,
          },
       },
    )
@@ -63,6 +64,10 @@ export const fetchInventoryItemById = asyncHandler(async (req, res, next) => {
 export const createInventoryItem = asyncHandler(async (req, res, next) => {
    const javaUrl = process.env.JAVA_URL
    const user = req.user
+
+   if (user.userType === 'user') {
+      return next(errorHandler(403, 'Forbidden'))
+   }
 
    const newInventoryItem = req.body
    const response = await fetch(
@@ -91,8 +96,10 @@ export const createInventoryItem = asyncHandler(async (req, res, next) => {
 export const updateInventoryItem = asyncHandler(async (req, res, next) => {
    const javaUrl = process.env.JAVA_URL
    const user = req.user
+   if (user.userType === 'user') {
+      return next(errorHandler(403, 'Forbidden'))
+   }
 
-   console.log(user.id, user.userType)
    const { inventoryItemId } = req.query
 
    const inventoryItemToUpdate = req.body
@@ -110,9 +117,9 @@ export const updateInventoryItem = asyncHandler(async (req, res, next) => {
       },
    )
 
-   // if (!response.ok) {
-   //    return next(errorHandler(500, `Error updating inventory item`))
-   // }
+   if (!response.ok) {
+      return next(errorHandler(500, `Error updating inventory item`))
+   }
 
    const updatedInventoryItem = await response.json()
    res.json(updatedInventoryItem)
@@ -122,6 +129,10 @@ export const deleteInventoryItem = asyncHandler(async (req, res, next) => {
    const javaUrl = process.env.JAVA_URL
 
    const user = req.user
+   if (user.userType === 'user') {
+      return next(errorHandler(403, 'Forbidden'))
+   }
+
    const { inventoryItemId } = req.query
 
    const response = await fetch(

@@ -36,7 +36,7 @@ public class InventoryItemController {
         return ResponseEntity.ok(inventoryItemDTO);
     }
 
-    @GetMapping("/getInventoryItemsForSeller")
+    @GetMapping("/getInventoryItemsBySeller")
     public ResponseEntity<List<InventoryItemDTO>> getAllInventoryItem(HttpServletRequest request,
             @RequestParam String sellerId) {
 

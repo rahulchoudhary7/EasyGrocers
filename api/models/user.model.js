@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
    userType: {
       type: String,
       required: true,
-      default: "user"
+      default: "USER"
    },
    image: {
       type: String,

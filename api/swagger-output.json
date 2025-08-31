@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/api/user/register": {
+    "/api/v1/auth/user/register": {
       "post": {
         "description": "",
         "parameters": [
@@ -35,7 +35,7 @@
         }
       }
     },
-    "/api/user/login": {
+    "/api/v1/auth/user/login": {
       "post": {
         "description": "",
         "parameters": [
@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/user/logout": {
+    "/api/v1/auth/user/logout": {
       "get": {
         "description": "",
         "responses": {
@@ -72,7 +72,68 @@
         }
       }
     },
-    "/api/user/{userId}/addresses": {
+    "/api/v1/auth/seller/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/seller/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/seller/logout": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/user/{userId}/addresses": {
       "get": {
         "description": "",
         "parameters": [
@@ -83,7 +144,7 @@
             "type": "string"
           },
           {
-            "name": "authorization",
+            "name": "X-User-Id",
             "in": "header",
             "type": "string"
           }
@@ -104,7 +165,7 @@
             "type": "string"
           },
           {
-            "name": "authorization",
+            "name": "X-User-Id",
             "in": "header",
             "type": "string"
           },
@@ -143,7 +204,7 @@
         }
       }
     },
-    "/api/user/{userId}/addresses/{addressId}": {
+    "/api/v1/user/{userId}/addresses/{addressId}": {
       "put": {
         "description": "",
         "parameters": [
@@ -160,7 +221,7 @@
             "type": "string"
           },
           {
-            "name": "authorization",
+            "name": "X-User-Id",
             "in": "header",
             "type": "string"
           },
@@ -217,57 +278,11 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/seller/register": {
-      "post": {
-        "description": "",
-        "parameters": [
+          },
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "password": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      }
-    },
-    "/api/seller/login": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
-            }
+            "name": "X-User-Id",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
@@ -277,17 +292,7 @@
         }
       }
     },
-    "/api/seller/logout": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/seller/byCategory": {
+    "/api/v1/seller/byCategory": {
       "get": {
         "description": "",
         "parameters": [
@@ -303,172 +308,6 @@
           },
           {
             "name": "category",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/inventoryItem/getInventoryItems": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "sellerId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/inventoryItem/getInventoryItem": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "inventoryItemId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/inventoryItem/createInventoryItem": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/inventoryItem/updateInventoryItem": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "inventoryItemId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/inventoryItem/deleteInventoryItem": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "inventoryItemId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/categories/getAllCategories": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/categories/createCategory": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/categories/updateCategory": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "categoryId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/categories/deleteCategory": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "categoryId",
             "in": "query",
             "type": "string"
           }

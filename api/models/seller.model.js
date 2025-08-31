@@ -44,7 +44,7 @@ const sellerSchema = new mongoose.Schema({
    userType: {
       type: String,
       required: true,
-      default: "seller"
+      default: "SELLER"
    },
    image: {
       type: String,

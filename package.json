@@ -3,5 +3,9 @@
     "version": "1.0.0",
     "scripts": {
         "start": "concurrently \"cd client && npm run dev\" \"cd api && node index.js\""
+    },
+    "dependencies": {
+        "eureka-js-client": "^4.5.0",
+        "main-project": "file:"
     }
 }

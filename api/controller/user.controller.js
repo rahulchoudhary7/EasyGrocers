@@ -22,9 +22,13 @@ export const register = asyncHandler(async (req, res, next) => {
       return next(errorHandler(500, 'Internal Server error'))
    }
 
-   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: '60m',
-   })
+   const token = jwt.sign(
+      { id: newUser._id, userType: newUser.userType },
+      process.env.JWT_SECRET,
+      {
+         expiresIn: '60m',
+      },
+   )
 
    const userWithoutPassword = newUser.toObject()
    delete userWithoutPassword.password
@@ -81,11 +85,11 @@ export const logout = (req, res) => {
 }
 
 export const getAddress = asyncHandler(async (req, res, next) => {
-   if (req.user.id !== req.params.userId) {
+   const userId = req.header('X-User-Id')
+
+   if (userId !== req.params.userId) {
       return next(errorHandler(403, 'You are not authorized'))
    }
-
-   const userId = req.params.userId
 
    const user = await User.findById(userId)
 
@@ -101,11 +105,12 @@ export const getAddress = asyncHandler(async (req, res, next) => {
 })
 
 export const addAddress = asyncHandler(async (req, res, next) => {
-   if (req.user.id !== req.params.userId) {
+   const userId = req.header('X-User-Id')
+
+   if (userId !== req.params.userId) {
       return next(errorHandler(403, 'You are not authorized'))
    }
 
-   const userId = req.params.userId
    const { houseNumber, floor, area, landmark, name, phone } = req.body
 
    const user = await User.findById(userId)
@@ -133,11 +138,12 @@ export const addAddress = asyncHandler(async (req, res, next) => {
 })
 
 export const updateAddress = asyncHandler(async (req, res, next) => {
-   if (req.user.id !== req.params.userId) {
+   const userId = req.header('X-User-Id')
+
+   if (userId !== req.params.userId) {
       return next(errorHandler(403, 'You are not authorized'))
    }
 
-   const userId = req.params.userId
    const addressId = req.params.addressId
    const { houseNumber, floor, area, landmark, name, phone } = req.body
 
@@ -174,11 +180,12 @@ export const updateAddress = asyncHandler(async (req, res, next) => {
 })
 
 export const deleteAddress = asyncHandler(async (req, res, next) => {
-   if (req.user.id !== req.params.userId) {
+   const userId = req.header('X-User-Id')
+
+   if (userId !== req.params.userId) {
       return next(errorHandler(403, 'You are not authorized'))
    }
 
-   const userId = req.params.userId
    const addressId = req.params.addressId
 
    const user = await User.findById(userId)
